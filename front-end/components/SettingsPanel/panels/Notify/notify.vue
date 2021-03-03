@@ -1,5 +1,15 @@
 <template>
     <div>
+        <p><strong>Status sounds:</strong></p>
+        <p>
+            <button class="option" @click="enableSound" :class="{ current: sound }">
+                Enable status sounds
+            </button>
+            <button class="option" @click="disableSound" :class="{ current: !sound }">
+                Disable status sounds
+            </button>
+        </p>
+        <p><strong>Push notifications:</strong></p>
         <p>
             By enabling desktop notifications, you'll receive a push message for every new status pushed to the
             dashboard.
@@ -30,6 +40,8 @@ import {
     SETTINGS_SET_NOTIFICATIONS_ON,
     SETTINGS_SET_NOTIFICATIONS_OFF,
     SETTINGS_SET_NOTIFICATION_STATUSES,
+    SETTINGS_SET_SOUND_ON,
+    SETTINGS_SET_SOUND_OFF,
 } from '../../../../store/StaticMutations';
 
 export default {
@@ -46,6 +58,12 @@ export default {
         disableNotifications() {
             this.$store.commit(SETTINGS_SET_NOTIFICATIONS_OFF);
         },
+        enableSound() {
+            this.$store.commit(SETTINGS_SET_SOUND_ON);
+        },
+        disableSound() {
+            this.$store.commit(SETTINGS_SET_SOUND_OFF);
+        },
         toggleNotificationStatus(status) {
             let statuses = this.$store.state.settings.notificationStatuses;
             statuses[status] = !statuses[status];
@@ -53,6 +71,9 @@ export default {
         },
     },
     computed: {
+        sound() {
+            return this.$store.state.settings.sound;
+        },
         pushNotifications() {
             return this.$store.state.settings.pushNotifications;
         },

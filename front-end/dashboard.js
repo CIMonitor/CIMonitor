@@ -22,6 +22,11 @@ new Vue({
     data() {
         return {
             isConnected: false,
+            sounds: {
+                success: new Audio('/sounds/success.mp3'),
+                start: new Audio('/sounds/start.mp3'),
+                error: new Audio('/sounds/error.mp3'),
+            },
         };
     },
     created() {
@@ -50,6 +55,25 @@ new Vue({
                 });
             } catch (error) {
                 // do nothing.
+            }
+        },
+        play(sound) {
+            console.log(`Play ${sound}.`);
+            this.sounds[sound].play();
+        },
+        playSound(status) {
+            if (!this.$store.state.settings.sound) {
+                console.log('not playing sound');
+                return;
+            }
+
+            switch (status.state) {
+                case 'success':
+                    return this.play('success');
+                case 'error':
+                    return this.play('error');
+                case 'warning':
+                    return this.play('start');
             }
         },
         cursorHide() {
@@ -91,6 +115,7 @@ new Vue({
         },
         [socketEvents.eventTriggerStatus](status) {
             this.pushNotification(status);
+            this.playSound(status);
         },
     },
 });
